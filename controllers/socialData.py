@@ -1,10 +1,20 @@
 import requests
+import tweepy
 
-def getSocialData(term):
-    data = requests.get(
-        f"https://api.twitter.com/2/tweets/search/recent?query={term}", 
-        headers = {
-            'Authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAAGiKMwEAAAAA9IOJaFNMvj3x6FaqJQnoJyZ81Rs%3D8MVGwbqXMkCedrCMgSSlCguvPXqKBKQovKm8ZjaEqMe1N1sbs2'
-            })
-    return data.text
+
+
+auth = tweepy.OAuth2BearerHandler(BEARER_TOKEN)
+api = tweepy.API(auth)
+
+def get_tweets(term:str):
+    response = api.search_tweets(term)
+    tweet_data = []
+    for tweet in response:
+        tweet_data.append({
+            "Text":tweet._json['text'],
+            "Date":tweet._json['created_at'],
+            "User":tweet._json['user']['name']
+        })
+    return tweet_data
+
 
