@@ -1,10 +1,13 @@
 import praw
 from praw.models import MoreComments
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 reddit = praw.Reddit(
     client_id="KU76U36XnTO059URKYzzvw",
     client_secret="NTaia7Qa6ibQPW7c8JB3mYjrZaanuA",
     user_agent="my user agent by u/equivalent-prior-778",
 )
+
+analyzer = SentimentIntensityAnalyzer()
 
 comment_list = []
 
@@ -31,7 +34,7 @@ comment_list = []
 for comment in submission.comments:
     if isinstance(comment, MoreComments):
         continue
-    comment_list.append(comment.body)
+    comment_list.append([comment.body, analyzer.polarity_scores(comment.body)['compound']])
 
 
 print(comment_list)
